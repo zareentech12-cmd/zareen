@@ -49,8 +49,8 @@ window.addEventListener("unhandledrejection", (e) => {
 
 function storageOk() {
   try {
-    sessionStorage.setItem("__zareen_test__", "1");
-    sessionStorage.removeItem("__zareen_test__");
+    localStorage.setItem("__zareen_test__", "1");
+    localStorage.removeItem("__zareen_test__");
     return true;
   } catch (e) {
     return false;
@@ -84,7 +84,7 @@ function showDashboard() {
 }
 
 try {
-  if (sessionStorage.getItem(SESSION_KEY) === "1") {
+  if (localStorage.getItem(SESSION_KEY) === "1") {
     showDashboard();
   }
 } catch (e) {
@@ -97,7 +97,9 @@ loginForm.addEventListener("submit", (e) => {
   const p = document.getElementById("password").value;
   if (u === ADMIN_USER && p === ADMIN_PASS) {
     try {
-      sessionStorage.setItem(SESSION_KEY, "1");
+      /* localStorage (not sessionStorage) so this browser stays signed in
+         across restarts, until Log out is clicked. */
+      localStorage.setItem(SESSION_KEY, "1");
     } catch (err) {
       showLoginIssue("Couldn't sign in: this browser is blocking local storage. Try a normal (non-private) window.");
       return;
@@ -111,7 +113,7 @@ loginForm.addEventListener("submit", (e) => {
 
 document.getElementById("logoutBtn").addEventListener("click", () => {
   try {
-    sessionStorage.removeItem(SESSION_KEY);
+    localStorage.removeItem(SESSION_KEY);
   } catch (e) {}
   location.reload();
 });
