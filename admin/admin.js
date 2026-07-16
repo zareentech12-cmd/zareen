@@ -204,6 +204,8 @@ async function loadContent() {
 function populateForm(data) {
   data.brand = data.brand || { logo: "bracket", customLogoUrl: "" };
   data.contact = data.contact || { email: "", phone: "", social: [] };
+  data.hero = data.hero || { eyebrow: "", title: "", lede: "" };
+  data.about = data.about || { text: "" };
   data.services = data.services || [];
   data.team = data.team || [];
   data.projects = data.projects || [];
@@ -216,10 +218,10 @@ function populateForm(data) {
   document.getElementById("f_phone").value = data.contact.phone || "";
   renderList("socialList", data.contact.social, SOCIAL_FIELDS, "Link");
 
-  document.getElementById("f_heroEyebrow").value = data.hero?.eyebrow || "";
-  document.getElementById("f_heroTitle").value = data.hero?.title || "";
-  document.getElementById("f_heroLede").value = data.hero?.lede || "";
-  document.getElementById("f_aboutText").value = data.about?.text || "";
+  document.getElementById("f_heroEyebrow").value = data.hero.eyebrow || "";
+  document.getElementById("f_heroTitle").value = data.hero.title || "";
+  document.getElementById("f_heroLede").value = data.hero.lede || "";
+  document.getElementById("f_aboutText").value = data.about.text || "";
 
   renderList("servicesList", data.services, SERVICE_FIELDS, "Service");
   renderList("teamList", data.team, TEAM_FIELDS, "Member");
