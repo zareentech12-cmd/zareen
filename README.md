@@ -27,10 +27,14 @@ Plain HTML/CSS/JS, no build step. Ready for GitHub Pages.
 
 ## Admin panel — `/admin/`
 
-The homepage's hero text, about text, and project list are not hardcoded — they load at
-runtime from `data/content.json`. `/admin/` is a small editor for that file: sign in,
-edit, hit **Publish changes**, and it commits straight to this repo. GitHub Pages
-picks it up within a minute or two.
+Nothing on the homepage is hardcoded — logo, contact info, hero text, about text,
+services, team, and projects all load at runtime from `data/content.json`. `/admin/`
+is the editor for that file: sign in, edit, hit **Publish changes**, and it commits
+straight to this repo. GitHub Pages picks it up within a minute or two.
+
+Panels: **Logo** (pick Bracket/Facet/Node, or upload your own image), **Contact**
+(email, phone, social/hiring links — label one "Upwork" to drive the "Hire us" buttons),
+**Hero**, **About**, **Services**, **Team**, **Projects**.
 
 The login form is a soft gate (client-side, unlisted, blocked from search engines via
 `robots.txt`) — it is not real access control, since anyone with the URL and browser
