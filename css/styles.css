@@ -183,6 +183,30 @@ h3 { font-size: 1.15rem; margin-bottom: 0.4rem; }
 @media (prefers-color-scheme: dark) { .nav-cta { background: var(--gold); color: var(--ink) !important; } }
 :root[data-theme="dark"] .nav-cta { background: var(--gold); color: var(--ink) !important; }
 
+.header-actions { display: flex; align-items: center; gap: 0.5rem; }
+
+.theme-toggle {
+  display: flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: none;
+  color: var(--fg);
+  cursor: pointer;
+  flex: none;
+}
+.theme-toggle:hover { border-color: var(--gold); color: var(--gold); }
+.theme-toggle svg { width: 17px; height: 17px; }
+.theme-toggle .icon-sun { display: none; }
+@media (prefers-color-scheme: dark) {
+  .theme-toggle .icon-moon { display: none; }
+  .theme-toggle .icon-sun { display: block; }
+}
+:root[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+:root[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+:root[data-theme="light"] .theme-toggle .icon-moon { display: block; }
+:root[data-theme="light"] .theme-toggle .icon-sun { display: none; }
+
 .nav-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; padding: 0.5rem; cursor: pointer; }
 .nav-toggle span { width: 22px; height: 2px; background: var(--fg); }
 

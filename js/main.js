@@ -1,5 +1,18 @@
 document.getElementById("year").textContent = new Date().getFullYear();
 
+const themeToggle = document.getElementById("themeToggle");
+themeToggle.addEventListener("click", () => {
+  const root = document.documentElement;
+  const explicit = root.getAttribute("data-theme");
+  const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const isDark = explicit ? explicit === "dark" : systemDark;
+  const next = isDark ? "light" : "dark";
+  root.setAttribute("data-theme", next);
+  try {
+    localStorage.setItem("zareen_theme", next);
+  } catch (e) {}
+});
+
 const navToggle = document.getElementById("navToggle");
 const siteNav = document.getElementById("siteNav");
 

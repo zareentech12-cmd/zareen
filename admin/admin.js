@@ -29,10 +29,51 @@ function showStatus(msg, kind) {
   statusMsg.className = "status-msg" + (kind ? " " + kind : "");
 }
 
+function showLoginIssue(msg) {
+  loginError.hidden = false;
+  loginError.textContent = msg;
+}
+
+/* Any uncaught error becomes visible on the page instead of a silent freeze —
+   there is no other console this site's visitors would think to check. */
+window.addEventListener("error", (e) => {
+  const msg = "Unexpected error: " + e.message;
+  if (dashboardView && !dashboardView.hidden) showStatus(msg, "error");
+  else showLoginIssue(msg);
+});
+window.addEventListener("unhandledrejection", (e) => {
+  const msg = "Unexpected error: " + (e.reason && e.reason.message ? e.reason.message : e.reason);
+  if (dashboardView && !dashboardView.hidden) showStatus(msg, "error");
+  else showLoginIssue(msg);
+});
+
+function storageOk() {
+  try {
+    sessionStorage.setItem("__zareen_test__", "1");
+    sessionStorage.removeItem("__zareen_test__");
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+if (!storageOk()) {
+  showLoginIssue(
+    "This browser is blocking local storage (common in private/incognito mode, or with strict privacy settings). Sign-in can't be kept without it — try a normal browser window."
+  );
+}
+
 function showDashboard() {
   loginView.hidden = true;
   dashboardView.hidden = false;
-  if (localStorage.getItem(TOKEN_KEY)) {
+  let hasToken = false;
+  try {
+    hasToken = !!localStorage.getItem(TOKEN_KEY);
+  } catch (e) {
+    showStatus("Local storage is blocked, so a GitHub token can't be saved in this browser.", "error");
+    return;
+  }
+  if (hasToken) {
     tokenSetup.hidden = true;
     editorPanels.hidden = false;
     loadContent();
@@ -42,8 +83,12 @@ function showDashboard() {
   }
 }
 
-if (sessionStorage.getItem(SESSION_KEY) === "1") {
-  showDashboard();
+try {
+  if (sessionStorage.getItem(SESSION_KEY) === "1") {
+    showDashboard();
+  }
+} catch (e) {
+  /* storageOk() above already surfaced this */
 }
 
 loginForm.addEventListener("submit", (e) => {
@@ -51,31 +96,44 @@ loginForm.addEventListener("submit", (e) => {
   const u = document.getElementById("username").value;
   const p = document.getElementById("password").value;
   if (u === ADMIN_USER && p === ADMIN_PASS) {
-    sessionStorage.setItem(SESSION_KEY, "1");
+    try {
+      sessionStorage.setItem(SESSION_KEY, "1");
+    } catch (err) {
+      showLoginIssue("Couldn't sign in: this browser is blocking local storage. Try a normal (non-private) window.");
+      return;
+    }
     loginError.hidden = true;
     showDashboard();
   } else {
-    loginError.hidden = false;
+    showLoginIssue("Incorrect username or password.");
   }
 });
 
 document.getElementById("logoutBtn").addEventListener("click", () => {
-  sessionStorage.removeItem(SESSION_KEY);
+  try {
+    sessionStorage.removeItem(SESSION_KEY);
+  } catch (e) {}
   location.reload();
 });
 
 document.getElementById("forgetTokenBtn").addEventListener("click", () => {
-  localStorage.removeItem(TOKEN_KEY);
+  try {
+    localStorage.removeItem(TOKEN_KEY);
+  } catch (e) {}
   location.reload();
 });
 
 tokenForm.addEventListener("submit", (e) => {
   e.preventDefault();
   const token = document.getElementById("ghToken").value.trim();
-  if (token) {
+  if (!token) return;
+  try {
     localStorage.setItem(TOKEN_KEY, token);
-    showDashboard();
+  } catch (err) {
+    showStatus("Couldn't save the token: this browser is blocking local storage.", "error");
+    return;
   }
+  showDashboard();
 });
 
 /* ---- GitHub Contents API — generic file read/write ---- */
