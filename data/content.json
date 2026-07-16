@@ -62,17 +62,19 @@
   "projects": [
     {
       "title": "Task Maager",
-      "description": "One sentence on the problem and the outcome — what changed for the client.",
+      "description": "Full-stack task management system with real-time team collaboration, role-based access control, and project-based chat. Built for organizations to manage projects, sections, tasks, file attachments, and audit logs",
       "tags": [
         "React",
-        "Node.js",
-        "PostgreSQL"
+        "Express",
+        "PostgreSQL",
+        "Socket.IO",
+        "REST API"
       ],
       "link": "#",
       "color": "#B8843A"
     },
     {
-      "title": "Project name",
+      "title": "TechHub",
       "description": "A full-stack freelancing platform built for Afghanistan's tech professionals — featuring milestone-based contracts, real-time chat, KYC identity verification, AI-powered proposal writing, and a built-in code review assistant.",
       "tags": [
         "Express",
