@@ -4,8 +4,8 @@
     "customLogoUrl": ""
   },
   "contact": {
-    "email": "hello@example.com",
-    "phone": "",
+    "email": "zareen.tech12@gmail.com",
+    "phone": "+93728606577, +93794284644",
     "social": [
       {
         "label": "GitHub",
@@ -45,23 +45,23 @@
   ],
   "team": [
     {
-      "name": "Your name",
-      "role": "Co-founder, Engineering",
-      "bio": "One line on focus and background.",
+      "name": "Ahmad Fahim Anwari",
+      "role": "Co-founder, Software & AI Engineer",
+      "bio": "Builds backend systems, APIs, AI-powered applications, and scalable software with a focus on reliability and clean architecture.With a strong background in computer networks and infrastructure",
       "color": "#B8843A",
       "link": "#"
     },
     {
       "name": "Co-founder's name",
-      "role": "Co-founder, Engineering",
-      "bio": "One line on focus and background.",
+      "role": "Co-founder, Software Engineer",
+      "bio": "Focused on modern frontend development, UI implementation, and building responsive web applications.",
       "color": "#17140F",
       "link": "#"
     }
   ],
   "projects": [
     {
-      "title": "Project name",
+      "title": "Task Maager",
       "description": "One sentence on the problem and the outcome — what changed for the client.",
       "tags": [
         "React",
