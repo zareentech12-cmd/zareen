@@ -49,7 +49,8 @@
       "role": "Co-founder, Software & AI Engineer",
       "bio": "Builds backend systems, APIs, AI-powered applications, and scalable software with a focus on reliability and clean architecture.With a strong background in computer networks and infrastructure",
       "color": "#B8843A",
-      "link": "#"
+      "link": "#",
+      "photo": "assets/uploads/teamList-0-1784209804167.svg"
     },
     {
       "name": "Whahid Ahmad Nadeem",
@@ -71,7 +72,8 @@
         "REST API"
       ],
       "link": "#",
-      "color": "#B8843A"
+      "color": "#B8843A",
+      "image": "assets/uploads/projectsList-0-1784209818812.png"
     },
     {
       "title": "TechHub",
