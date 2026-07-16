@@ -7,32 +7,69 @@
     "email": "hello@example.com",
     "phone": "",
     "social": [
-      { "label": "GitHub", "url": "#" },
-      { "label": "Upwork", "url": "#" }
+      {
+        "label": "GitHub",
+        "url": "#"
+      },
+      {
+        "label": "Upwork",
+        "url": "#"
+      }
     ]
   },
   "hero": {
     "eyebrow": "Software & AI Engineering Studio",
     "title": "We build the software behind growing businesses.",
-    "lede": "Zareen is a two-person engineering studio \u2014 web applications, backend systems, and applied AI, designed and shipped end to end. Currently taking on projects through Upwork."
+    "lede": "Zareen is a two-person engineering studio — web applications, backend systems, and applied AI, designed and shipped end to end. Currently taking on projects through Upwork."
   },
   "about": {
-    "text": "We're computer science graduates who started Zareen to work on real software instead of side projects. Right now that means client work on Upwork \u2014 web apps, backend systems, and the occasional AI feature. As the studio grows, we're building toward an office, a small team, and products of our own."
+    "text": "We're computer science graduates who started Zareen to work on real software instead of side projects. Right now that means client work on Upwork — web apps, backend systems, and the occasional AI feature. As the studio grows, we're building toward an office, a small team, and products of our own."
   },
   "services": [
-    { "title": "Web Applications", "description": "Product-grade front ends and dashboards — React, TypeScript, accessible by default." },
-    { "title": "Backend & APIs", "description": "Services and integrations built to handle real traffic, not just a demo." },
-    { "title": "Databases & Systems", "description": "Schema design, migrations, and data pipelines that stay correct as they grow." },
-    { "title": "Applied AI", "description": "LLM features, automation, and ML integrations scoped to an actual business need." }
+    {
+      "title": "Web Applications",
+      "description": "Product-grade front ends and dashboards — React, TypeScript, accessible by default."
+    },
+    {
+      "title": "Backend & APIs",
+      "description": "Services and integrations built to handle real traffic, not just a demo."
+    },
+    {
+      "title": "Databases & Systems",
+      "description": "Schema design, migrations, and data pipelines that stay correct as they grow."
+    },
+    {
+      "title": "Applied AI",
+      "description": "LLM features, automation, and ML integrations scoped to an actual business need."
+    }
   ],
   "team": [
-    { "name": "Your name", "role": "Co-founder, Engineering", "bio": "One line on focus and background.", "color": "#B8843A", "link": "#" },
-    { "name": "Co-founder's name", "role": "Co-founder, Engineering", "bio": "One line on focus and background.", "color": "#17140F", "link": "#" }
+    {
+      "name": "Your name",
+      "role": "Co-founder, Engineering",
+      "bio": "One line on focus and background.",
+      "color": "#B8843A",
+      "link": "#"
+    },
+    {
+      "name": "Co-founder's name",
+      "role": "Co-founder, Engineering",
+      "bio": "One line on focus and background.",
+      "color": "#17140F",
+      "link": "#"
+    },
+    {
+      "name": "__ui_test_member__",
+      "role": "",
+      "bio": "",
+      "color": "#B8843A",
+      "link": ""
+    }
   ],
   "projects": [
     {
       "title": "Project name",
-      "description": "One sentence on the problem and the outcome \u2014 what changed for the client.",
+      "description": "One sentence on the problem and the outcome — what changed for the client.",
       "tags": [
         "React",
         "Node.js",
@@ -43,7 +80,7 @@
     },
     {
       "title": "Project name",
-      "description": "One sentence on the problem and the outcome \u2014 what changed for the client.",
+      "description": "One sentence on the problem and the outcome — what changed for the client.",
       "tags": [
         "Python",
         "FastAPI",
