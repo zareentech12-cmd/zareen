@@ -1,8 +1,21 @@
 /* Soft gate only — this runs in the visitor's browser, so it is not real access
    control. Real write protection is the GitHub token below, which lives only in
-   this browser's localStorage and is never shipped in any file. */
+   this browser's localStorage and is never shipped in any file.
+   The password below is stored hashed (SHA-256), not in plain text, so it isn't
+   readable at a glance in the page source — but it is not salted or slow-hashed,
+   so treat this as a deterrent against casual viewing, not real cryptographic
+   protection. Someone willing to run the hash through a cracking tool, or just
+   call showDashboard() directly in devtools, can still get past it. */
 const ADMIN_USER = "admin";
-const ADMIN_PASS = "hbZ8-LseX-avHw";
+const ADMIN_PASS_HASH = "775692e1d98133ad6c462714650124c8d6968422959ac7205aae8d5771fd16db";
+
+async function sha256Hex(text) {
+  const bytes = new TextEncoder().encode(text);
+  const digest = await crypto.subtle.digest("SHA-256", bytes);
+  return Array.from(new Uint8Array(digest))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}
 
 const OWNER = "zareentech12-cmd";
 const REPO = "zareen";
@@ -91,11 +104,20 @@ try {
   /* storageOk() above already surfaced this */
 }
 
-loginForm.addEventListener("submit", (e) => {
+loginForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   const u = document.getElementById("username").value;
   const p = document.getElementById("password").value;
-  if (u === ADMIN_USER && p === ADMIN_PASS) {
+
+  let passwordOk = false;
+  try {
+    passwordOk = (await sha256Hex(p)) === ADMIN_PASS_HASH;
+  } catch (err) {
+    showLoginIssue("This browser can't run the sign-in check. Try a recent version of Chrome, Firefox, Safari, or Edge.");
+    return;
+  }
+
+  if (u === ADMIN_USER && passwordOk) {
     try {
       /* localStorage (not sessionStorage) so this browser stays signed in
          across restarts, until Log out is clicked. */
