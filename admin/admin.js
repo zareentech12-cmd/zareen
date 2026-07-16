@@ -7,7 +7,7 @@ const ADMIN_PASS = "hbZ8-LseX-avHw";
 const OWNER = "zareentech12-cmd";
 const REPO = "zareen";
 const BRANCH = "main";
-const FILE_PATH = "data/content.json";
+const CONTENT_PATH = "data/content.json";
 const TOKEN_KEY = "zareen_gh_token";
 const SESSION_KEY = "zareen_admin_session";
 
@@ -19,7 +19,6 @@ const tokenSetup = document.getElementById("tokenSetup");
 const tokenForm = document.getElementById("tokenForm");
 const editorPanels = document.getElementById("editorPanels");
 const statusMsg = document.getElementById("statusMsg");
-const projectsList = document.getElementById("projectsList");
 
 let currentData = null;
 let currentSha = null;
@@ -79,44 +78,57 @@ tokenForm.addEventListener("submit", (e) => {
   }
 });
 
-async function ghGetContent() {
+/* ---- GitHub Contents API — generic file read/write ---- */
+
+async function ghGetFile(path) {
   const token = localStorage.getItem(TOKEN_KEY);
   const res = await fetch(
-    `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}?ref=${BRANCH}`,
+    `https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}?ref=${BRANCH}`,
     { headers: { Authorization: `Bearer ${token}`, Accept: "application/vnd.github+json" } }
   );
-  if (!res.ok) throw new Error("Couldn't load content from GitHub (" + res.status + "). Check your token.");
-  const json = await res.json();
-  const decoded = decodeURIComponent(escape(atob(json.content.replace(/\n/g, ""))));
-  return { data: JSON.parse(decoded), sha: json.sha };
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error("GitHub read failed (" + res.status + "). Check your token.");
+  return res.json();
 }
 
-async function ghPutContent(newData, sha) {
+async function ghPutFile(path, base64Content, sha, message) {
   const token = localStorage.getItem(TOKEN_KEY);
-  const body = {
-    message: "Update site content via admin panel",
-    content: btoa(unescape(encodeURIComponent(JSON.stringify(newData, null, 2)))),
-    sha,
-    branch: BRANCH,
-  };
-  const res = await fetch(
-    `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`,
-    {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: "application/vnd.github+json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    }
-  );
+  const body = { message, content: base64Content, branch: BRANCH };
+  if (sha) body.sha = sha;
+  const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: "application/vnd.github+json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
     throw new Error(err.message || "Save failed (" + res.status + ")");
   }
   return res.json();
 }
+
+function utf8ToBase64(str) {
+  return btoa(unescape(encodeURIComponent(str)));
+}
+function base64ToUtf8(b64) {
+  return decodeURIComponent(escape(atob(b64.replace(/\n/g, ""))));
+}
+
+async function ghGetContent() {
+  const file = await ghGetFile(CONTENT_PATH);
+  if (!file) throw new Error("content.json not found in the repo.");
+  return { data: JSON.parse(base64ToUtf8(file.content)), sha: file.sha };
+}
+
+async function ghPutContent(data, sha) {
+  return ghPutFile(CONTENT_PATH, utf8ToBase64(JSON.stringify(data, null, 2)), sha, "Update site content via admin panel");
+}
+
+/* ---- Load + populate ---- */
 
 async function loadContent() {
   try {
@@ -132,61 +144,179 @@ async function loadContent() {
 }
 
 function populateForm(data) {
+  data.brand = data.brand || { logo: "bracket", customLogoUrl: "" };
+  data.contact = data.contact || { email: "", phone: "", social: [] };
+  data.services = data.services || [];
+  data.team = data.team || [];
+  data.projects = data.projects || [];
+
+  document.querySelectorAll('input[name="logoChoice"]').forEach((el) => {
+    el.checked = el.value === data.brand.logo;
+  });
+
+  document.getElementById("f_email").value = data.contact.email || "";
+  document.getElementById("f_phone").value = data.contact.phone || "";
+  renderList("socialList", data.contact.social, SOCIAL_FIELDS, "Link");
+
   document.getElementById("f_heroEyebrow").value = data.hero?.eyebrow || "";
   document.getElementById("f_heroTitle").value = data.hero?.title || "";
   document.getElementById("f_heroLede").value = data.hero?.lede || "";
   document.getElementById("f_aboutText").value = data.about?.text || "";
-  renderProjectRows(data.projects || []);
+
+  renderList("servicesList", data.services, SERVICE_FIELDS, "Service");
+  renderList("teamList", data.team, TEAM_FIELDS, "Member");
+  renderList("projectsList", data.projects, PROJECT_FIELDS, "Project");
 }
 
-function renderProjectRows(projects) {
-  projectsList.innerHTML = "";
-  projects.forEach((p, i) => {
+document.querySelectorAll('input[name="logoChoice"]').forEach((el) => {
+  el.addEventListener("change", (e) => {
+    if (!currentData) return;
+    currentData.brand.logo = e.target.value;
+    currentData.brand.customLogoUrl = "";
+  });
+});
+
+/* ---- Generic list editor (services, team, projects, social links) ---- */
+
+const SOCIAL_FIELDS = [
+  { key: "label", label: "Label (e.g. Upwork, GitHub)" },
+  { key: "url", label: "URL" },
+];
+const SERVICE_FIELDS = [
+  { key: "title", label: "Title" },
+  { key: "description", label: "Description", type: "textarea" },
+];
+const TEAM_FIELDS = [
+  { key: "name", label: "Name" },
+  { key: "role", label: "Role" },
+  { key: "bio", label: "Bio", type: "textarea" },
+  { key: "color", label: "Avatar color", type: "color" },
+  { key: "link", label: "Link (GitHub, LinkedIn, etc.)" },
+];
+const PROJECT_FIELDS = [
+  { key: "title", label: "Title" },
+  { key: "description", label: "Description", type: "textarea" },
+  { key: "tags", label: "Tags (comma separated)", type: "tags" },
+  { key: "link", label: "Link" },
+  { key: "color", label: "Thumbnail color", type: "color" },
+];
+
+function renderList(containerId, items, fields, itemLabel) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = "";
+
+  items.forEach((item, i) => {
     const row = document.createElement("div");
     row.className = "project-row";
+    const fieldsHtml = fields
+      .map((f) => {
+        if (f.type === "textarea") {
+          return `<label>${f.label}<textarea rows="2" data-list="${containerId}" data-field="${f.key}" data-i="${i}">${escapeHtml(item[f.key] || "")}</textarea></label>`;
+        }
+        if (f.type === "color") {
+          return `<label>${f.label}<input type="color" data-list="${containerId}" data-field="${f.key}" data-i="${i}" value="${escapeAttr(item[f.key] || "#B8843A")}"></label>`;
+        }
+        const val = f.type === "tags" ? (item[f.key] || []).join(", ") : item[f.key] || "";
+        return `<label>${f.label}<input type="text" data-list="${containerId}" data-field="${f.key}" data-i="${i}" value="${escapeAttr(val)}"></label>`;
+      })
+      .join("");
     row.innerHTML = `
       <div class="project-row-head">
-        <span>Project ${i + 1}</span>
-        <button type="button" class="remove-btn" data-i="${i}">Remove</button>
+        <span>${itemLabel} ${i + 1}</span>
+        <button type="button" class="remove-btn" data-list="${containerId}" data-i="${i}">Remove</button>
       </div>
-      <label>Title<input type="text" data-field="title" data-i="${i}" value="${escapeAttr(p.title || "")}"></label>
-      <label>Description<textarea rows="2" data-field="description" data-i="${i}">${escapeHtml(p.description || "")}</textarea></label>
-      <div class="field-row">
-        <label>Tags (comma separated)<input type="text" data-field="tags" data-i="${i}" value="${escapeAttr((p.tags || []).join(", "))}"></label>
-        <label>Link<input type="text" data-field="link" data-i="${i}" value="${escapeAttr(p.link || "")}"></label>
-      </div>
-      <label>Thumbnail color<input type="color" data-field="color" data-i="${i}" value="${escapeAttr(p.color || "#B8843A")}"></label>
-    `;
-    projectsList.appendChild(row);
+      ${fieldsHtml}`;
+    container.appendChild(row);
   });
 
-  projectsList.querySelectorAll("[data-field]").forEach((el) => {
+  container.querySelectorAll("[data-field]").forEach((el) => {
     el.addEventListener("input", (e) => {
       const i = Number(e.target.dataset.i);
       const field = e.target.dataset.field;
       if (field === "tags") {
-        currentData.projects[i].tags = e.target.value.split(",").map((t) => t.trim()).filter(Boolean);
+        items[i][field] = e.target.value.split(",").map((t) => t.trim()).filter(Boolean);
       } else {
-        currentData.projects[i][field] = e.target.value;
+        items[i][field] = e.target.value;
       }
     });
   });
 
-  projectsList.querySelectorAll(".remove-btn").forEach((btn) => {
+  container.querySelectorAll(".remove-btn").forEach((btn) => {
     btn.addEventListener("click", (e) => {
-      const i = Number(e.target.dataset.i);
-      currentData.projects.splice(i, 1);
-      renderProjectRows(currentData.projects);
+      items.splice(Number(e.target.dataset.i), 1);
+      renderList(containerId, items, fields, itemLabel);
     });
   });
 }
 
+function blankFor(fields) {
+  const obj = {};
+  fields.forEach((f) => {
+    obj[f.key] = f.type === "tags" ? [] : f.type === "color" ? "#B8843A" : "";
+  });
+  return obj;
+}
+
+document.getElementById("addSocialBtn").addEventListener("click", () => {
+  if (!currentData) return;
+  currentData.contact.social.push(blankFor(SOCIAL_FIELDS));
+  renderList("socialList", currentData.contact.social, SOCIAL_FIELDS, "Link");
+});
+document.getElementById("addServiceBtn").addEventListener("click", () => {
+  if (!currentData) return;
+  currentData.services.push(blankFor(SERVICE_FIELDS));
+  renderList("servicesList", currentData.services, SERVICE_FIELDS, "Service");
+});
+document.getElementById("addTeamBtn").addEventListener("click", () => {
+  if (!currentData) return;
+  currentData.team.push(blankFor(TEAM_FIELDS));
+  renderList("teamList", currentData.team, TEAM_FIELDS, "Member");
+});
 document.getElementById("addProjectBtn").addEventListener("click", () => {
   if (!currentData) return;
-  currentData.projects = currentData.projects || [];
-  currentData.projects.push({ title: "", description: "", tags: [], link: "#", color: "#B8843A" });
-  renderProjectRows(currentData.projects);
+  currentData.projects.push(blankFor(PROJECT_FIELDS));
+  renderList("projectsList", currentData.projects, PROJECT_FIELDS, "Project");
 });
+
+/* ---- Logo upload ---- */
+
+document.getElementById("logoUpload").addEventListener("change", async (e) => {
+  const file = e.target.files[0];
+  if (!file || !currentData) return;
+  const logoStatus = document.getElementById("logoStatus");
+  logoStatus.hidden = false;
+  logoStatus.className = "status-msg";
+  logoStatus.textContent = "Uploading…";
+
+  try {
+    const ext = file.name.split(".").pop().toLowerCase();
+    const path = `assets/logo-custom.${ext}`;
+    const base64 = await fileToBase64(file);
+    const existing = await ghGetFile(path);
+    await ghPutFile(path, base64, existing ? existing.sha : undefined, "Upload custom logo");
+
+    currentData.brand.logo = "custom";
+    currentData.brand.customLogoUrl = path;
+    document.querySelectorAll('input[name="logoChoice"]').forEach((el) => (el.checked = false));
+
+    logoStatus.textContent = "Uploaded. Click \"Publish changes\" to make it live.";
+    logoStatus.className = "status-msg ok";
+  } catch (err) {
+    logoStatus.textContent = err.message;
+    logoStatus.className = "status-msg error";
+  }
+});
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(",")[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+/* ---- Publish ---- */
 
 document.getElementById("publishBtn").addEventListener("click", async () => {
   if (!currentData) return;
@@ -196,6 +326,8 @@ document.getElementById("publishBtn").addEventListener("click", async () => {
   currentData.hero.lede = document.getElementById("f_heroLede").value;
   currentData.about = currentData.about || {};
   currentData.about.text = document.getElementById("f_aboutText").value;
+  currentData.contact.email = document.getElementById("f_email").value;
+  currentData.contact.phone = document.getElementById("f_phone").value;
 
   try {
     showStatus("Publishing…");

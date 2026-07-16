@@ -56,6 +56,30 @@
         <p id="statusMsg" class="status-msg" hidden></p>
 
         <section class="panel">
+          <h2>Logo</h2>
+          <div class="logo-options" id="logoOptions">
+            <label class="logo-option"><input type="radio" name="logoChoice" value="bracket"><img src="../assets/bracket-icon.svg" alt="Bracket" width="28" height="28"><span>Bracket</span></label>
+            <label class="logo-option"><input type="radio" name="logoChoice" value="facet"><img src="../assets/facet-icon.svg" alt="Facet" width="28" height="28"><span>Facet</span></label>
+            <label class="logo-option"><input type="radio" name="logoChoice" value="node"><img src="../assets/node-icon.svg" alt="Node" width="28" height="28"><span>Node</span></label>
+          </div>
+          <p>Or upload your own mark (SVG or PNG, transparent background recommended):</p>
+          <input type="file" id="logoUpload" accept="image/svg+xml,image/png">
+          <p id="logoStatus" class="status-msg" hidden></p>
+        </section>
+
+        <section class="panel">
+          <h2>Contact</h2>
+          <label>Email<input type="text" id="f_email"></label>
+          <label>Phone (optional)<input type="text" id="f_phone"></label>
+          <div class="panel-head">
+            <h3>Social &amp; hiring links</h3>
+            <button id="addSocialBtn" class="btn btn-ghost btn-sm" type="button">+ Add link</button>
+          </div>
+          <p>Label one of these "Upwork" — it's used for the "Hire us" buttons.</p>
+          <div id="socialList"></div>
+        </section>
+
+        <section class="panel">
           <h2>Hero</h2>
           <label>Eyebrow<input type="text" id="f_heroEyebrow"></label>
           <label>Headline<textarea id="f_heroTitle" rows="2"></textarea></label>
@@ -65,6 +89,22 @@
         <section class="panel">
           <h2>About</h2>
           <label>About text<textarea id="f_aboutText" rows="4"></textarea></label>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <h2>Services</h2>
+            <button id="addServiceBtn" class="btn btn-ghost btn-sm" type="button">+ Add service</button>
+          </div>
+          <div id="servicesList"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <h2>Team</h2>
+            <button id="addTeamBtn" class="btn btn-ghost btn-sm" type="button">+ Add member</button>
+          </div>
+          <div id="teamList"></div>
         </section>
 
         <section class="panel">

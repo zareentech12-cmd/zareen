@@ -140,6 +140,15 @@ h3 { font-size: 1.15rem; margin-bottom: 0.4rem; }
 }
 .brand { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; }
 .brand-mark { flex: none; }
+.logo-dark { display: none; }
+@media (prefers-color-scheme: dark) {
+  .logo-light { display: none; }
+  .logo-dark { display: block; }
+}
+:root[data-theme="dark"] .logo-light { display: none; }
+:root[data-theme="dark"] .logo-dark { display: block; }
+:root[data-theme="light"] .logo-light { display: block; }
+:root[data-theme="light"] .logo-dark { display: none; }
 .brand-word {
   font-family: var(--font-display);
   font-weight: 700;
@@ -264,6 +273,29 @@ h3 { font-size: 1.15rem; margin-bottom: 0.4rem; }
 .project-card-empty .project-body { text-align: center; }
 .project-card-empty h3 { color: var(--muted); }
 .loading-note { color: var(--muted); font-family: var(--font-mono); font-size: 0.85rem; grid-column: 1 / -1; }
+
+/* ---- Team ---- */
+.team-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.75rem;
+  text-align: left;
+}
+.team-avatar {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-weight: 700; color: var(--paper);
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+.team-card h3 { margin-bottom: 0.1rem; }
+.team-role { font-family: var(--font-mono); font-size: 0.75rem; color: var(--gold); margin: 0 0 0.75rem; }
+.team-card p.bio { color: var(--muted); font-size: 0.92rem; margin: 0 0 0.75rem; }
+.team-card a { font-family: var(--font-display); font-weight: 600; font-size: 0.88rem; color: var(--gold); text-decoration: none; }
+
+.contact-phone { margin-top: 1rem; font-family: var(--font-mono); color: color-mix(in srgb, var(--paper) 70%, transparent); }
 
 /* ---- About / process ---- */
 .about-grid {
