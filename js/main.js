@@ -91,8 +91,8 @@ function renderTeam(team) {
       : `<div class="team-avatar" style="background:${escapeAttr(m.color || "#B8843A")};">${escapeHtml(initials(m.name))}</div>`;
     const github = m.github || m.link || "";
     const links = [];
-    if (github) links.push(`<a href="${escapeAttr(github)}" target="_blank" rel="noopener">GitHub</a>`);
-    if (m.upwork) links.push(`<a href="${escapeAttr(m.upwork)}" target="_blank" rel="noopener">Upwork</a>`);
+    if (github) links.push(`<a href="${escapeAttr(sanitizeUrl(github))}" target="_blank" rel="noopener noreferrer">GitHub</a>`);
+    if (m.upwork) links.push(`<a href="${escapeAttr(sanitizeUrl(m.upwork))}" target="_blank" rel="noopener noreferrer">Upwork</a>`);
     card.innerHTML = `
       ${avatarHtml}
       <h3>${escapeHtml(m.name || "")}</h3>
@@ -120,8 +120,8 @@ function renderProjects(projects) {
       ? `<div class="project-thumb"><img src="${escapeAttr(p.image)}" alt=""></div>`
       : `<div class="project-thumb" style="background:${escapeAttr(p.color || "#B8843A")};"></div>`;
     const links = [];
-    if (p.link) links.push(`<a class="project-link" href="${escapeAttr(p.link)}" target="_blank" rel="noopener">View project →</a>`);
-    if (p.githubLink) links.push(`<a class="project-link" href="${escapeAttr(p.githubLink)}" target="_blank" rel="noopener">Code →</a>`);
+    if (p.link) links.push(`<a class="project-link" href="${escapeAttr(sanitizeUrl(p.link))}" target="_blank" rel="noopener noreferrer">View project →</a>`);
+    if (p.githubLink) links.push(`<a class="project-link" href="${escapeAttr(sanitizeUrl(p.githubLink))}" target="_blank" rel="noopener noreferrer">Code →</a>`);
     card.innerHTML = `
       ${thumbHtml}
       <div class="project-body">
@@ -142,15 +142,15 @@ function renderContact(contact) {
 
   const navCta = document.getElementById("navCta");
   if (upwork && upwork.url) {
-    navCta.href = upwork.url;
+    navCta.href = sanitizeUrl(upwork.url);
   }
 
   const contactUpwork = document.getElementById("contactUpwork");
-  if (upwork && upwork.url) contactUpwork.href = upwork.url;
+  if (upwork && upwork.url) contactUpwork.href = sanitizeUrl(upwork.url);
 
   const contactEmail = document.getElementById("contactEmail");
   if (email) {
-    contactEmail.href = "mailto:" + email;
+    contactEmail.href = "mailto:" + encodeURIComponent(email).replace(/%40/g, "@");
     contactEmail.textContent = email;
   }
 
@@ -165,12 +165,25 @@ function renderContact(contact) {
   social.forEach((s) => {
     if (!s.label) return;
     const a = document.createElement("a");
-    a.href = s.url || "#";
+    a.href = sanitizeUrl(s.url);
     a.target = "_blank";
-    a.rel = "noopener";
+    a.rel = "noopener noreferrer";
     a.textContent = s.label;
     footerLinks.appendChild(a);
   });
+}
+
+/* Only allow link schemes that can't run script (blocks javascript:, data:, etc.
+   in case a link field in content.json is ever malformed or tampered with). */
+function sanitizeUrl(url) {
+  if (!url) return "#";
+  const trimmed = String(url).trim();
+  if (trimmed === "" || trimmed.startsWith("#") || trimmed.startsWith("/")) return trimmed || "#";
+  try {
+    const parsed = new URL(trimmed, window.location.href);
+    if (["http:", "https:", "mailto:", "tel:"].includes(parsed.protocol)) return trimmed;
+  } catch (e) {}
+  return "#";
 }
 
 function escapeHtml(str) {

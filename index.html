@@ -8,15 +8,11 @@
 <meta property="og:title" content="Zareen — Software &amp; AI Engineering Studio">
 <meta property="og:description" content="Web applications, backend systems, and applied AI, shipped end to end.">
 <meta property="og:type" content="website">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="icon" type="image/svg+xml" href="assets/bracket-icon.svg">
 <link rel="apple-touch-icon" href="assets/favicon-512.png">
 <link rel="stylesheet" href="css/styles.css">
-<script>
-  try {
-    var t = localStorage.getItem("zareen_theme");
-    if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
-  } catch (e) {}
-</script>
+<script src="js/theme-init.js"></script>
 </head>
 <body>
 
