@@ -86,13 +86,19 @@ function renderTeam(team) {
   team.forEach((m) => {
     const card = document.createElement("article");
     card.className = "team-card";
-    const linkHtml = m.link ? `<a href="${escapeAttr(m.link)}" target="_blank" rel="noopener">Profile →</a>` : "";
+    const avatarHtml = m.photo
+      ? `<img class="team-avatar" src="${escapeAttr(m.photo)}" alt="">`
+      : `<div class="team-avatar" style="background:${escapeAttr(m.color || "#B8843A")};">${escapeHtml(initials(m.name))}</div>`;
+    const github = m.github || m.link || "";
+    const links = [];
+    if (github) links.push(`<a href="${escapeAttr(github)}" target="_blank" rel="noopener">GitHub</a>`);
+    if (m.upwork) links.push(`<a href="${escapeAttr(m.upwork)}" target="_blank" rel="noopener">Upwork</a>`);
     card.innerHTML = `
-      <div class="team-avatar" style="background:${escapeAttr(m.color || "#B8843A")};">${escapeHtml(initials(m.name))}</div>
+      ${avatarHtml}
       <h3>${escapeHtml(m.name || "")}</h3>
       <p class="team-role">${escapeHtml(m.role || "")}</p>
       <p class="bio">${escapeHtml(m.bio || "")}</p>
-      ${linkHtml}`;
+      <p class="team-links">${links.join("")}</p>`;
     grid.appendChild(card);
   });
 }
@@ -102,7 +108,7 @@ function renderProjects(projects) {
   grid.innerHTML = "";
 
   if (!projects || projects.length === 0) {
-    grid.innerHTML = '<p class="loading-note">No projects yet — add one from the admin panel.</p>';
+    grid.innerHTML = '<p class="loading-note">New work is on the way — check back soon.</p>';
     return;
   }
 
@@ -110,25 +116,22 @@ function renderProjects(projects) {
     const card = document.createElement("article");
     card.className = "project-card";
     const tags = (p.tags || []).map((t) => `<span>${escapeHtml(t)}</span>`).join("");
+    const thumbHtml = p.image
+      ? `<div class="project-thumb"><img src="${escapeAttr(p.image)}" alt=""></div>`
+      : `<div class="project-thumb" style="background:${escapeAttr(p.color || "#B8843A")};"></div>`;
+    const links = [];
+    if (p.link) links.push(`<a class="project-link" href="${escapeAttr(p.link)}" target="_blank" rel="noopener">View project →</a>`);
+    if (p.githubLink) links.push(`<a class="project-link" href="${escapeAttr(p.githubLink)}" target="_blank" rel="noopener">Code →</a>`);
     card.innerHTML = `
-      <div class="project-thumb" style="background:${escapeAttr(p.color || "#B8843A")};"></div>
+      ${thumbHtml}
       <div class="project-body">
         <h3>${escapeHtml(p.title || "Untitled project")}</h3>
         <p>${escapeHtml(p.description || "")}</p>
         <p class="tags">${tags}</p>
-        <a class="project-link" href="${escapeAttr(p.link || "#")}" target="_blank" rel="noopener">View project →</a>
+        <p class="project-links">${links.join("")}</p>
       </div>`;
     grid.appendChild(card);
   });
-
-  const nextCard = document.createElement("article");
-  nextCard.className = "project-card project-card-empty";
-  nextCard.innerHTML = `
-    <div class="project-body">
-      <h3>Your next project</h3>
-      <p>This slot is open. Ship something, then add it from the admin panel.</p>
-    </div>`;
-  grid.appendChild(nextCard);
 }
 
 function renderContact(contact) {

@@ -131,3 +131,11 @@ input:focus, textarea:focus {
 input[type="file"] { font-family: var(--font-body); font-size: 0.85rem; }
 
 .panel h3 { font-size: 0.9rem; margin: 1.5rem 0 0.75rem; }
+
+.field-preview {
+  width: 72px; height: 72px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  margin-top: -0.5rem;
+}

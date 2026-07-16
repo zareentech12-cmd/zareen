@@ -249,19 +249,27 @@ const SERVICE_FIELDS = [
   { key: "description", label: "Description", type: "textarea" },
 ];
 const TEAM_FIELDS = [
+  { key: "photo", label: "Picture", type: "image" },
   { key: "name", label: "Name" },
   { key: "role", label: "Role" },
   { key: "bio", label: "Bio", type: "textarea" },
-  { key: "color", label: "Avatar color", type: "color" },
-  { key: "link", label: "Link (GitHub, LinkedIn, etc.)" },
+  { key: "color", label: "Avatar color (used if no picture)", type: "color" },
+  { key: "github", label: "GitHub link" },
+  { key: "upwork", label: "Upwork link" },
 ];
 const PROJECT_FIELDS = [
+  { key: "image", label: "Picture", type: "image" },
   { key: "title", label: "Title" },
   { key: "description", label: "Description", type: "textarea" },
   { key: "tags", label: "Tags (comma separated)", type: "tags" },
-  { key: "link", label: "Link" },
-  { key: "color", label: "Thumbnail color", type: "color" },
+  { key: "link", label: "Live link" },
+  { key: "githubLink", label: "GitHub / source link" },
+  { key: "color", label: "Thumbnail color (used if no picture)", type: "color" },
 ];
+
+function assetSrc(path) {
+  return path ? "../" + path : "";
+}
 
 function renderList(containerId, items, fields, itemLabel) {
   const container = document.getElementById(containerId);
@@ -278,6 +286,11 @@ function renderList(containerId, items, fields, itemLabel) {
         if (f.type === "color") {
           return `<label>${f.label}<input type="color" data-list="${containerId}" data-field="${f.key}" data-i="${i}" value="${escapeAttr(item[f.key] || "#B8843A")}"></label>`;
         }
+        if (f.type === "image") {
+          const src = assetSrc(item[f.key]);
+          const preview = src ? `<img class="field-preview" src="${escapeAttr(src)}" alt="">` : "";
+          return `<label>${f.label}<input type="file" accept="image/*" data-list="${containerId}" data-field="${f.key}" data-i="${i}" data-imgfield="1"></label>${preview}`;
+        }
         const val = f.type === "tags" ? (item[f.key] || []).join(", ") : item[f.key] || "";
         return `<label>${f.label}<input type="text" data-list="${containerId}" data-field="${f.key}" data-i="${i}" value="${escapeAttr(val)}"></label>`;
       })
@@ -291,7 +304,7 @@ function renderList(containerId, items, fields, itemLabel) {
     container.appendChild(row);
   });
 
-  container.querySelectorAll("[data-field]").forEach((el) => {
+  container.querySelectorAll("[data-field]:not([data-imgfield])").forEach((el) => {
     el.addEventListener("input", (e) => {
       const i = Number(e.target.dataset.i);
       const field = e.target.dataset.field;
@@ -299,6 +312,27 @@ function renderList(containerId, items, fields, itemLabel) {
         items[i][field] = e.target.value.split(",").map((t) => t.trim()).filter(Boolean);
       } else {
         items[i][field] = e.target.value;
+      }
+    });
+  });
+
+  container.querySelectorAll("[data-imgfield]").forEach((el) => {
+    el.addEventListener("change", async (e) => {
+      const i = Number(e.target.dataset.i);
+      const field = e.target.dataset.field;
+      const file = e.target.files[0];
+      if (!file) return;
+      showStatus("Uploading picture…");
+      try {
+        const ext = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
+        const path = `assets/uploads/${containerId}-${i}-${Date.now()}.${ext}`;
+        const base64 = await fileToBase64(file);
+        await ghPutFile(path, base64, undefined, `Upload picture for ${itemLabel.toLowerCase()} ${i + 1}`);
+        items[i][field] = path;
+        statusMsg.hidden = true;
+        renderList(containerId, items, fields, itemLabel);
+      } catch (err) {
+        showStatus("Picture upload failed: " + err.message, "error");
       }
     });
   });
