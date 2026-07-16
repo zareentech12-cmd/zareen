@@ -23,8 +23,22 @@ Plain HTML/CSS/JS, no build step. Ready for GitHub Pages.
 - **Upwork link** — every `href="#"` next to "Hire us on Upwork" / "Message us on Upwork" (`index.html`, 2 spots).
 - **Email** — `hello@example.com` in the contact section and footer.
 - **GitHub / Upwork footer links** — bottom of the page.
-- **Projects** — `#work` section has 2 placeholder cards and 1 empty slot. Swap in real projects: title, one-line result, tech tags, link. Delete the empty-slot card once you have 3+.
-- **About paragraph** — adjust once details change (team size, location, focus).
+- **Projects, hero text, about text** — edit these from `/admin/`, not by hand (see below).
+
+## Admin panel — `/admin/`
+
+The homepage's hero text, about text, and project list are not hardcoded — they load at
+runtime from `data/content.json`. `/admin/` is a small editor for that file: sign in,
+edit, hit **Publish changes**, and it commits straight to this repo. GitHub Pages
+picks it up within a minute or two.
+
+The login form is a soft gate (client-side, unlisted, blocked from search engines via
+`robots.txt`) — it is not real access control, since anyone with the URL and browser
+devtools could bypass it. The real protection is separate: saving requires a GitHub
+token pasted into the browser on first use, stored only in that browser's `localStorage`,
+never committed to the repo. Without that token nothing can be written, regardless of
+the login. Use a **fine-grained personal access token** scoped only to this repo with
+"Contents: Read and write" — not a classic token with broad account access.
 
 ## Structure
 
@@ -33,7 +47,9 @@ site/
   index.html
   css/styles.css
   js/main.js
-  assets/        — logo files (bracket mark + wordmark, light/dark)
+  data/content.json   — hero/about text + project list, edited via /admin/
+  admin/               — content editor (index.html, admin.css, admin.js)
+  assets/              — logo files (bracket mark + wordmark, light/dark)
 ```
 
 ## Swapping the logo mark

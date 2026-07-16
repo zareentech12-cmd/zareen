@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zareen Admin</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/svg+xml" href="../assets/bracket-icon.svg">
+<link rel="stylesheet" href="../css/styles.css">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<div class="admin-shell">
+
+  <section id="loginView" class="login-view">
+    <div class="login-card">
+      <img src="../assets/bracket-icon.svg" width="32" height="32" alt="">
+      <h1>Zareen Admin</h1>
+      <p class="login-sub">Sign in to manage site content.</p>
+      <form id="loginForm">
+        <label>Username<input type="text" id="username" autocomplete="username" required></label>
+        <label>Password<input type="password" id="password" autocomplete="current-password" required></label>
+        <p id="loginError" class="form-error" hidden>Incorrect username or password.</p>
+        <button type="submit" class="btn btn-primary">Log in</button>
+      </form>
+    </div>
+  </section>
+
+  <section id="dashboardView" class="dashboard-view" hidden>
+    <header class="admin-header">
+      <div class="admin-header-inner">
+        <span class="admin-title">Zareen Admin</span>
+        <div class="admin-header-actions">
+          <a href="../index.html" target="_blank" class="btn btn-ghost btn-sm">View site ↗</a>
+          <button id="logoutBtn" class="btn btn-ghost btn-sm" type="button">Log out</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="admin-body">
+
+      <section id="tokenSetup" class="panel" hidden>
+        <h2>Connect to GitHub</h2>
+        <p>Paste a GitHub personal access token so changes can be saved to the repository. Create a
+          <strong>fine-grained token</strong> at
+          <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com/settings/personal-access-tokens/new</a>
+          scoped only to the <code>zareen</code> repository, with <strong>Contents: Read and write</strong> permission.
+          It's saved only in this browser, never sent anywhere but GitHub.</p>
+        <form id="tokenForm">
+          <label>GitHub token<input type="password" id="ghToken" placeholder="github_pat_..." required></label>
+          <button type="submit" class="btn btn-primary">Save token</button>
+        </form>
+      </section>
+
+      <section id="editorPanels" hidden>
+        <p id="statusMsg" class="status-msg" hidden></p>
+
+        <section class="panel">
+          <h2>Hero</h2>
+          <label>Eyebrow<input type="text" id="f_heroEyebrow"></label>
+          <label>Headline<textarea id="f_heroTitle" rows="2"></textarea></label>
+          <label>Subtext<textarea id="f_heroLede" rows="3"></textarea></label>
+        </section>
+
+        <section class="panel">
+          <h2>About</h2>
+          <label>About text<textarea id="f_aboutText" rows="4"></textarea></label>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <h2>Projects</h2>
+            <button id="addProjectBtn" class="btn btn-ghost btn-sm" type="button">+ Add project</button>
+          </div>
+          <div id="projectsList"></div>
+        </section>
+
+        <div class="publish-bar">
+          <button id="publishBtn" class="btn btn-primary" type="button">Publish changes</button>
+          <button id="forgetTokenBtn" class="btn btn-ghost" type="button">Forget GitHub token</button>
+        </div>
+      </section>
+
+    </div>
+  </section>
+
+</div>
+<script src="admin.js"></script>
+</body>
+</html>

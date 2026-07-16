@@ -263,6 +263,7 @@ h3 { font-size: 1.15rem; margin-bottom: 0.4rem; }
 }
 .project-card-empty .project-body { text-align: center; }
 .project-card-empty h3 { color: var(--muted); }
+.loading-note { color: var(--muted); font-family: var(--font-mono); font-size: 0.85rem; grid-column: 1 / -1; }
 
 /* ---- About / process ---- */
 .about-grid {

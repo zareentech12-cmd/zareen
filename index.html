@@ -40,9 +40,9 @@
     <section class="hero">
       <div class="hero-cut" aria-hidden="true"></div>
       <div class="wrap hero-inner">
-        <p class="eyebrow">Software &amp; AI Engineering Studio</p>
-        <h1>We build the software behind growing businesses.</h1>
-        <p class="lede">Zareen is a two-person engineering studio — web applications, backend systems, and applied AI, designed and shipped end to end. Currently taking on projects through Upwork.</p>
+        <p class="eyebrow" id="heroEyebrow">Software &amp; AI Engineering Studio</p>
+        <h1 id="heroTitle">We build the software behind growing businesses.</h1>
+        <p class="lede" id="heroLede">Zareen is a two-person engineering studio — web applications, backend systems, and applied AI, designed and shipped end to end. Currently taking on projects through Upwork.</p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="#work">See our work</a>
           <a class="btn btn-ghost" href="#contact">Get in touch</a>
@@ -83,35 +83,10 @@
       <div class="wrap">
         <p class="eyebrow">Selected work</p>
         <h2>Recent projects</h2>
-        <p class="section-note">Replace the cards below with real client or personal projects — screenshot, one-line result, stack, link.</p>
+        <p class="section-note">Managed from the admin panel — add, edit, or remove projects there.</p>
 
-        <div class="grid grid-3">
-          <article class="project-card">
-            <div class="project-thumb" style="background:linear-gradient(135deg, var(--gold-light), var(--gold));"></div>
-            <div class="project-body">
-              <h3>Project name</h3>
-              <p>One sentence on the problem and the outcome — what changed for the client.</p>
-              <p class="tags"><span>React</span><span>Node.js</span><span>PostgreSQL</span></p>
-              <a class="project-link" href="#">View project →</a>
-            </div>
-          </article>
-
-          <article class="project-card">
-            <div class="project-thumb" style="background:linear-gradient(135deg, var(--ink), #3a352b);"></div>
-            <div class="project-body">
-              <h3>Project name</h3>
-              <p>One sentence on the problem and the outcome — what changed for the client.</p>
-              <p class="tags"><span>Python</span><span>FastAPI</span><span>OpenAI</span></p>
-              <a class="project-link" href="#">View project →</a>
-            </div>
-          </article>
-
-          <article class="project-card project-card-empty">
-            <div class="project-body">
-              <h3>Your next project</h3>
-              <p>This slot is open. Ship something, then swap this card for it.</p>
-            </div>
-          </article>
+        <div class="grid grid-3" id="projectsGrid">
+          <p class="loading-note">Loading projects…</p>
         </div>
       </div>
     </section>
@@ -121,7 +96,7 @@
         <div>
           <p class="eyebrow">About Zareen</p>
           <h2>Two engineers, one studio.</h2>
-          <p>We're computer science graduates who started Zareen to work on real software instead of side projects. Right now that means client work on Upwork — web apps, backend systems, and the occasional AI feature. As the studio grows, we're building toward an office, a small team, and products of our own.</p>
+          <p id="aboutText">We're computer science graduates who started Zareen to work on real software instead of side projects. Right now that means client work on Upwork — web apps, backend systems, and the occasional AI feature. As the studio grows, we're building toward an office, a small team, and products of our own.</p>
         </div>
         <ol class="process">
           <li><span class="process-index">1</span><div><h3>Discover</h3><p>Scope the problem before touching code.</p></div></li>

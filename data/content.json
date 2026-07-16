@@ -1,0 +1,26 @@
+{
+  "hero": {
+    "eyebrow": "Software & AI Engineering Studio",
+    "title": "We build the software behind growing businesses.",
+    "lede": "Zareen is a two-person engineering studio — web applications, backend systems, and applied AI, designed and shipped end to end. Currently taking on projects through Upwork."
+  },
+  "about": {
+    "text": "We're computer science graduates who started Zareen to work on real software instead of side projects. Right now that means client work on Upwork — web apps, backend systems, and the occasional AI feature. As the studio grows, we're building toward an office, a small team, and products of our own."
+  },
+  "projects": [
+    {
+      "title": "Project name",
+      "description": "One sentence on the problem and the outcome — what changed for the client.",
+      "tags": ["React", "Node.js", "PostgreSQL"],
+      "link": "#",
+      "color": "#B8843A"
+    },
+    {
+      "title": "Project name",
+      "description": "One sentence on the problem and the outcome — what changed for the client.",
+      "tags": ["Python", "FastAPI", "OpenAI"],
+      "link": "#",
+      "color": "#17140F"
+    }
+  ]
+}
