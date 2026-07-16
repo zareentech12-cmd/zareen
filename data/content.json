@@ -73,11 +73,14 @@
     },
     {
       "title": "Project name",
-      "description": "One sentence on the problem and the outcome — what changed for the client.",
+      "description": "A full-stack freelancing platform built for Afghanistan's tech professionals — featuring milestone-based contracts, real-time chat, KYC identity verification, AI-powered proposal writing, and a built-in code review assistant.",
       "tags": [
-        "Python",
-        "FastAPI",
-        "OpenAI"
+        "Express",
+        "PostgreSQL",
+        "Next.js",
+        "Zustand",
+        "Axios",
+        "Docker"
       ],
       "link": "#",
       "color": "#17140F"
