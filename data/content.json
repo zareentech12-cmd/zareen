@@ -29,15 +29,6 @@
       ],
       "link": "#",
       "color": "#17140F"
-    },
-    {
-      "title": "__admin_panel_write_test__",
-      "description": "temp",
-      "tags": [
-        "test"
-      ],
-      "link": "#",
-      "color": "#B8843A"
     }
   ]
 }
